@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Blockchain</title>
+
+
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+	<script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@0.18.2/dist/web3.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jshashes/1.0.6/hashes.min.js"></script>
+
+
+</head>
+
+<body style="background-color:rgb(240, 240, 240)">
+	<div class="jumbotron jumbotron-fluid" style="background-color: rgb(73, 73, 73); height:195px;">
+		<div class="container" style="text-align: center">
+			<h1 class="display-4" style="font-size: 50px; color: rgb(240, 240, 240);"><b>Instructor Application Form</b>
+			</h1>
+			<p class="lead" style="font-size: 18px;  color: rgb(240, 240, 240);">Bu formu kullanarak Ethereum Blockchain
+				ağı üzerinde Eğitmen kaydı
+				oluşturabilirsiniz. Eğitmenlerin 18 yaşından büyük olduklarını kanıtlaması gerekmektedir.</p>
+		</div>
+	</div>
+
+	<div class="container">
+		<form class="form-horizontal">
+			<div class="form-group">
+				<h3 id="instructor" style="text-align: center;"></h3><br><br>
+			</div>
+			<div id="loader" class="form-group">
+				<img src="spinner.gif " class="col-sm-offset-6"> <br>
+				<label class="col-sm-offset-6" style="font-weight: 100;">mining...</label>
+			</div>
+
+			<div class="form-group">
+				<label for="firstName" class="col-sm-2 control-label">Instructor Name:</label>
+				<div class="col-sm-8">
+					<input id="firstName" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="lastName" class="col-sm-2 control-label">Instructor Last Name:</label>
+				<div class="col-sm-8">
+					<input id="lastName" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="P" class="col-sm-2 control-label">Proof of Age:</label>
+				<div class="col-sm-8">
+					<input id="P" class="form-control" placeholder="hash code from 3rd party provider" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="Q" class="col-sm-2 control-label">Challenge:</label>
+				<div class="col-sm-8">
+					<input id="Q" class="form-control" type="text" placeholder="hash code from 3rd party provider">
+				</div>
+			</div>
+
+			<div id="success-demo-1">
+				<div class="alert alert-success">
+					<strong>Success!</strong> Doğrulama işlemi başarılı.
+				</div>
+			</div>
+
+			<div id="fail-demo-1">
+				<div class="alert alert-danger">
+					<strong>Alert!</strong> Doğrulama işlemi başarısız.
+				</div>
+			</div>
+
+			<div class="col-sm-offset-8">
+				<button class="btn btn-primary" style="font-size: 19px;" id="button">Update Instructor</button>
+			</div>
+
+		</form>
+	</div>
+
+	<br><br><br><br><br><br>
+	<hr />
+
+	<div class="jumbotron jumbotron-fluid" style="background-color: rgb(73, 73, 73); height:195px;">
+		<div class="container" style="text-align: center">
+			<h1 class="display-4" style="font-size: 45px; color: rgb(240, 240, 240);"><b>3rd Party Zero Knowledge Proof
+					Provider</b>
+			</h1>
+			<p class="lead" style="font-size: 18px;  color: rgb(240, 240, 240);">Bu sistem aracılığıyla yaşınızı karşı
+				tarafa bildirmeden doğrulayacak hash kodları edinebilirsiniz.</p>
+		</div>
+	</div><br><br>
+
+	<div class="container">
+		<form class="form-horizontal">
+			<div class="form-group">
+				<label class="btn btn-warning col-sm-offset-1 method=" GET" on
+					onclick='S=seed();document.getElementById("display_S").innerHTML = S'>Recreate Seed</label>
+				<label id="display_S" style="font-size: 15px; padding-left: 15px;"></label>
+			</div><br>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Actual Age:</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" name="actual_age" id="actual_age">
+				</div>
+				<label class="btn btn-info" onclick='P=prove(document.getElementById("actual_age").value)'>Create
+					Proof</label>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Proof of age:</label>
+				<label id="display_P" class="col-sm-4 control-label"></label>
+			</div><br><br>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Age To Prove:</label>
+				<div class="col-sm-4">
+					<input class="form-control" type="text" name="age_to_prove" id="age_to_prove">
+				</div>
+				<label class="btn btn-info"
+					onclick='Q=challenge(document.getElementById("actual_age").value, document.getElementById("age_to_prove").value)'>
+					Create Challenge
+				</label>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Challenge:</label>
+				<label id="display_Q" class="col-sm-4 control-label"></label>
+			</div><br><br>
+
+			<div class="form-group">
+				<div id="success-demo">
+					<div class="alert alert-success">
+						<strong>Success!</strong> Doğrulama işlemi başarılı.
+					</div>
+				</div>
+				
+				<div id="fail-demo">
+					<div class="alert alert-danger">
+						<strong>Alert!</strong> Doğrulama işlemi başarısız.
+					</div>
+				</div>
+
+				<label class="btn btn-success col-sm-offset-1"
+					onclick='V=verify(Q, document.getElementById("age_to_prove").value, P)'>Verify
+					challenge</label>
+				<br /><br />
+			</div>
+		</form>
+	</div>
+
+	<script>
+
+		if (typeof web3 !== 'undefined') {
+			web3 = new Web3(web3.currentProvider);
+		} else {
+			// set the provider you want from Web3.providers
+			web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+		}
+
+		web3.eth.defaultAccount = web3.eth.accounts[0];
+		var CoursetroContract = web3.eth.contract([
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_fName",
+				"type": "string"
+			},
+			{
+				"name": "_lName",
+				"type": "string"
+			}
+		],
+		"name": "setInstructor",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "fName",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "lName",
+				"type": "string"
+			}
+		],
+		"name": "Instructor",
+		"type": "event"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getInstructor",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+]);
+		var Coursetro = CoursetroContract.at('0x4ae64706f0f7bbf874bc23c65dab767afadaecae');
+
+		var instructorEvent = Coursetro.Instructor();
+		instructorEvent.watch(function (error, result) {
+			if (!error) {
+				$("#loader").hide();
+				$("#instructor").html("<b>Last Registered Instructor: </b>" + result.args.fName + " " + result.args.lName);
+			} else {
+				$("#fail-demo-1").show();
+				$("#loader").hide();
+				console.log(error);
+			}
+		});
+
+		$(document).ready(function () {
+			$("#success-demo-1").hide();
+			$("#fail-demo-1").hide();
+			$("#success-demo").hide();
+			$("#fail-demo").hide();
+		});
+
+		$("#button").click(function () {
+			P = document.getElementById("P").value;
+			Q = document.getElementById("Q").value;
+			verify(Q, 18, P);
+			if (_proof) {
+				console.log(_proof)
+				Coursetro.setInstructor($("#firstName").val(), $("#lastName").val());
+				$("#loader").show();
+				$("#success-demo-1").show();
+			}
+			else {
+				$("#fail-demo-1").show();
+				console.log(_proof)
+				console.warn("Non verified proof!")
+				return false;
+			}
+		});
+
+
+		//------------- Zero Knowledge Proof scripts start point --------------
+		var _proof = false;
+		function seed(num_zero_nibbles = 32, num_random_nibbles = 32) {
+			var s = "";
+			// first add zeros
+			for (var i = 0; i < num_zero_nibbles; i++) { s += "0"; }
+			// then add randoms
+			var allowed = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+			for (var i = 0; i < num_random_nibbles; i++) {
+				s += allowed.charAt(Math.floor(Math.random() * allowed.length));
+			}
+
+			return s;
+		}
+
+		function hashchain(seed, num_links) {
+			var h = seed
+			for (var i = 0; i < num_links; i++) {
+				h = new Hashes.SHA256().hex(h)
+			}
+			return h
+		}
+
+		function prove(age) {
+			P = hashchain(S, Number(age) + 1)
+			document.getElementById("display_P").innerHTML = P
+			return P
+		}
+
+		function challenge(age, age_to_prove) {
+			Q = hashchain(S, Number(age) + 1 - Number(age_to_prove))
+			document.getElementById("display_Q").innerHTML = Q
+			return Q
+		}
+
+		function verify(Q, age_to_prove, P) {
+			$("#success-demo").hide();
+			$("#fail-demo").hide();
+			V = hashchain(Q, Number(age_to_prove))
+			if (P == V) {
+				$("#success-demo").show();
+				//document.getElementById("verified").innerHTML = "VERIFIED!"
+				_proof = true
+			}
+			else {
+				//document.getElementById("verified").innerHTML = "FAILED!"
+				$("#fail-demo").show();
+				_proof = false
+			}
+			return V
+		}
+
+		S = seed();
+		document.getElementById("display_S").innerHTML = S
+
+	</script>
+
+</body>
+
+</html>

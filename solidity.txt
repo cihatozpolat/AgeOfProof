@@ -1,0 +1,22 @@
+pragma solidity ^0.5.1;
+
+contract Course{
+    
+    string fName;
+    string lName;
+
+    event Instructor(
+       string fName,
+       string lName
+    );
+
+    function setInstructor(string memory _fName,string memory _lName)public {
+        fName=_fName;
+        lName=_lName;
+        emit Instructor(_fName, _lName);
+    }
+    
+    function getInstructor() public view returns(string memory, string memory){
+        return (fName,lName);
+    }
+}
